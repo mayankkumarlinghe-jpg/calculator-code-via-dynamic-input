@@ -110,4 +110,55 @@ void showMenu() {
     }
     printDivider('═');
 }
+// ── Main ─────────────────────────────────────────────────────────────────────
+int main() {
+    cout << fixed << setprecision(6);
 
+    while (true) {
+        showMenu();
+        int choice = getChoice();
+        cout << "\n";
+
+        double a, b, result;
+        string expr;
+
+        switch (choice) {
+
+            // ── Binary operations ───────────────────────────────────────────
+            case 1: case 2: case 3: case 4: case 5: case 6: case 7: {
+                a = getNumber("  Enter first  number (a): ");
+                b = getNumber("  Enter second number (b): ");
+
+                if ((choice == 4 || choice == 5 || choice == 6) && b == 0) {
+                    cout << RED << "  ✗ Error: Division by zero!\n" << RESET;
+                    break;
+                }
+
+                switch (choice) {
+                    case 1: result = a + b;            expr = to_string(a) + " + " + to_string(b); break;
+                    case 2: result = a - b;            expr = to_string(a) + " - " + to_string(b); break;
+                    case 3: result = a * b;            expr = to_string(a) + " × " + to_string(b); break;
+                    case 4: result = a / b;            expr = to_string(a) + " ÷ " + to_string(b); break;
+                    case 5: result = floor(a / b);     expr = "⌊" + to_string(a) + " ÷ " + to_string(b) + "⌋"; break;
+                    case 6: result = fmod(a, b);       expr = to_string(a) + " mod " + to_string(b); break;
+                    case 7: result = pow(a, b);        expr = to_string(a) + " ^ " + to_string(b); break;
+                }
+                cout << GREEN << "  ✔ Result = " << result << RESET << "\n";
+                addHistory(expr, result);
+                break;
+            }
+
+            // ── Unary operations ────────────────────────────────────────────
+            case 8: case 9: case 10: case 11: case 12: case 13: {
+                a = getNumber("  Enter a number (a): ");
+
+                if (choice == 9 && a < 0) {
+                    cout << RED << "  ✗ Error: Square root of a negative number is undefined in ℝ.\n" << RESET;
+                    break;
+                }
+                if ((choice == 11 || choice == 12) && a <= 0) {
+                    cout << RED << "  ✗ Error: Logarithm undefined for non-positive numbers.\n" << RESET;
+                    break;
+                }
+
+                
