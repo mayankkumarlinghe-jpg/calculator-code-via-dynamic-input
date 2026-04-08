@@ -160,5 +160,33 @@ int main() {
                     cout << RED << "  ✗ Error: Logarithm undefined for non-positive numbers.\n" << RESET;
                     break;
                 }
+switch (choice) {
+                    case 8:  result = a * a;       expr = to_string(a) + "²"; break;
+                    case 9:  result = sqrt(a);     expr = "√" + to_string(a); break;
+                    case 10: result = cbrt(a);     expr = "∛" + to_string(a); break;
+                    case 11: result = log10(a);    expr = "log(" + to_string(a) + ")"; break;
+                    case 12: result = log(a);      expr = "ln(" + to_string(a) + ")"; break;
+                    case 13: result = fabs(a);     expr = "|" + to_string(a) + "|"; break;
+                }
+                cout << GREEN << "  ✔ Result = " << result << RESET << "\n";
+                addHistory(expr, result);
+                break;
+            }
+
+            case 14: showHistory();    break;
+            case 15: history.clear();
+                     cout << GREEN << "  ✔ History cleared.\n" << RESET; break;
+            case 16:
+                cout << CYAN << BOLD
+                     << "\n  Goodbye! Thanks for using the calculator. 👋\n\n"
+                     << RESET;
+                return 0;
+
+            default:
+                cout << RED << "  ✗ Invalid choice! Please select 1–16.\n" << RESET;
+        }
+    }
+}
+
 
                 
