@@ -1,78 +1,113 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
+#include <string>
+#include <iomanip>
+#include <limits>
 using namespace std;
 
-int main() {
-    int choice;
-    double a, b;
+// ── ANSI colour helpers ──────────────────────────────────────────────────────
+#define RESET   "\033[0m"
+#define BOLD    "\033[1m"
+#define CYAN    "\033[96m"
+#define YELLOW  "\033[93m"
+#define GREEN   "\033[92m"
+#define RED     "\033[91m"
+#define MAGENTA "\033[95m"
 
-    cout << "_________SIMPLE C++ CALCULATOR________\n";
-    cout << "1. Addition\n";
-    cout << "2. Subtraction\n";
-    cout << "3. Multiplication\n";
-    cout << "4. Division\n";
-    cout << "5. Floor Division\n";
-    cout << "6. Square\n";
-    cout << "7. Square Root\n";
-    cout << "_______________________________________\n";
-    cout << "Enter your choice: ";
-    cin >> choice;
-
-    switch(choice) {
-        case 1:
-            cout << "Enter two numbers: ";
-            cin >> a >> b;
-            cout << "Result = " << a + b;
-            break;
-
-        case 2:
-            cout << "Enter two numbers: ";
-            cin >> a >> b;
-            cout << "Result = " << a - b;
-            break;
-
-        case 3:
-            cout << "Enter two numbers: ";
-            cin >> a >> b;
-            cout << "Result = " << a * b;
-            break;
-
-        case 4:
-            cout << "Enter two numbers: ";
-            cin >> a >> b;
-            if(b != 0)
-                cout << "Result = " << a / b;
-            else
-                cout << "Error: Division by zero!";
-            break;
-
-        case 5:
-            cout << "Enter two numbers: ";
-            cin >> a >> b;
-            if(b != 0)
-                cout << "Result = " << floor(a / b);
-            else
-                cout << "Error: Division by zero!";
-            break;
-
-        case 6:
-            cout << "Enter a number: ";
-            cin >> a;
-            cout << "Result = " << a * a;
-            break;
-
-        case 7:
-            cout << "Enter a number: ";
-            cin >> a;
-            if(a >= 0)
-                cout << "Result = " << sqrt(a);
-            else
-                cout << "Error: Negative number!";
-            break;
-
-        default:
-            cout << "Invalid Choice!";
-    }
-
-    return 0;
+// ── Utilities ────────────────────────────────────────────────────────────────
+void clearInvalidInput() {
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
+
+double getNumber(const string& prompt) {
+    double val;
+    while (true) {
+        cout << YELLOW << prompt << RESET;
+        if (cin >> val) return val;
+        cout << RED << "  ✗ Invalid input. Please enter a number.\n" << RESET;
+        clearInvalidInput();
+    }
+}
+
+int getChoice() {
+    int val;
+    while (true) {
+        cout << CYAN << BOLD << "  Enter your choice: " << RESET;
+        if (cin >> val) return val;
+        cout << RED << "  ✗ Invalid input. Enter a number from the menu.\n" << RESET;
+        clearInvalidInput();
+    }
+}
+
+void printDivider(char c = '─', int width = 45) {
+    cout << CYAN;
+    for (int i = 0; i < width; i++) cout << c;
+    cout << RESET << "\n";
+}
+
+// ── History ──────────────────────────────────────────────────────────────────
+struct Record {
+    string expression;
+    double result;
+};
+
+vector<Record> history;
+
+void addHistory(const string& expr, double result) {
+    history.push_back({expr, result});
+}
+
+void showHistory() {
+    cout << "\n";
+    printDivider();
+    cout << BOLD << MAGENTA << "  📋  Calculation History\n" << RESET;
+    printDivider();
+    if (history.empty()) {
+        cout << "  No calculations yet.\n";
+    } else {
+        for (size_t i = 0; i < history.size(); i++) {
+            cout << "  " << setw(2) << i + 1 << ".  "
+                 << history[i].expression << " = "
+                 << GREEN << history[i].result << RESET << "\n";
+        }
+    }
+    printDivider();
+}
+
+// ── Menu ─────────────────────────────────────────────────────────────────────
+void showMenu() {
+    cout << "\n";
+    printDivider('═');
+    cout << BOLD << CYAN
+         << "       ◈  C++ ENHANCED CALCULATOR  ◈\n"
+         << RESET;
+    printDivider('═');
+
+    const char* opts[] = {
+        "Addition          (a + b)",
+        "Subtraction       (a - b)",
+        "Multiplication    (a × b)",
+        "Division          (a ÷ b)",
+        "Floor Division    (⌊a ÷ b⌋)",
+        "Modulus           (a mod b)",
+        "Power             (aⁿ)",
+        "Square            (a²)",
+        "Square Root       (√a)",
+        "Cube Root         (∛a)",
+        "Logarithm Base-10 (log a)",
+        "Natural Log       (ln a)",
+        "Absolute Value    (|a|)",
+        "Show History",
+        "Clear History",
+        "Exit"
+    };
+
+    for (int i = 0; i < 16; i++) {
+        cout << "  " << BOLD << setw(2) << i + 1 << RESET
+             << ".  " << opts[i] << "\n";
+    }
+    printDivider('═');
+}
+
